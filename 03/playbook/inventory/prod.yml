@@ -1,0 +1,24 @@
+---
+clickhouse:
+  hosts:
+    clickhouse-01:
+      ansible_host: 158.160.11.56
+      ansible_user: wiqtor
+      ansible_become: true
+      ansible_ssh_private_key_file: ~/.ssh/yc_cloud
+
+vector:
+  hosts:
+    vector-01:
+      ansible_host: 89.169.168.252
+      ansible_user: wiqtor
+      ansible_become: true
+      ansible_ssh_private_key_file: ~/.ssh/yc_cloud
+
+lighthouse:
+  hosts:
+    lighthouse-01:
+      ansible_host: 158.160.27.100
+      ansible_user: wiqtor
+      ansible_become: true
+      ansible_ssh_private_key_file: ~/.ssh/yc_cloud

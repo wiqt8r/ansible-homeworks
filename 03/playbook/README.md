@@ -67,7 +67,7 @@ lighthouse:
       ansible_ssh_private_key_file: ~/.ssh/yc_cloud
 ```
 
-## Variables
+## Переменные
 
 ### ClickHouse (group_vars/clickhouse/vars.yml)
 
@@ -98,7 +98,7 @@ lighthouse_nginx_conf: "/etc/nginx/conf.d/lighthouse.conf"
 lighthouse_server_name: "_"
 ```
 
-## Playbook Description
+## Playbook - описание
 
 ### ClickHouse Play
 
@@ -159,7 +159,7 @@ lighthouse_server_name: "_"
 - template
 - service
 
-## Usage
+## Использование
 
 Проверка без внесения изменений:
 
@@ -199,7 +199,7 @@ ansible-lint site.yml
 
 Плейбук подготовлен таким образом, чтобы соответствовать базовым требованиям ansible-lint.
 
-## Notes
+## Заметки
 
 В учебном окружении запуск осуществляется на реальных хостах Yandex Cloud через SSH подключение.
 

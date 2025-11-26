@@ -164,7 +164,7 @@ ansible-playbook -i inventory/prod.yml site.yml --tags lighthouse
 
 ## Лицензия
 
-Этот проект распространяется под лицензией MIT. Подробности смотрите в файле LICENSE.
+Этот проект распространяется под лицензией MIT.
 
 ## Автор
 

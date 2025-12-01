@@ -16,7 +16,53 @@
 ### Molecule
 
 1. Запустите  `molecule test -s ubuntu_xenial` (или с любым другим сценарием, не имеет значения) внутри корневой директории clickhouse-role, посмотрите на вывод команды. Данная команда может отработать с ошибками или не отработать вовсе, это нормально. Наша цель - посмотреть как другие в реальном мире используют молекулу И из чего может состоять сценарий тестирования.
+
+Команда не отрабатывает, ошибается на 'playbooks', т.к. судя по всему ДЗ писалось под другую версию Молекулы.
+
+<img width="1973" height="140" alt="image" src="https://github.com/user-attachments/assets/016945fb-664c-4c7b-9672-8fbf806430a4" />
+
 2. Перейдите в каталог с ролью vector-role и создайте сценарий тестирования по умолчанию при помощи `molecule init scenario --driver-name docker`.
+
+Молекула не поняла `--driver-name docker`, 
+<img width="1865" height="141" alt="image" src="https://github.com/user-attachments/assets/184d48e7-d9c5-4546-9a05-46d92c81c369" />
+
+пришлось сделать `molecule init scenario default`
+<img width="1940" height="690" alt="image" src="https://github.com/user-attachments/assets/adb6123e-a7fd-41bc-9139-e069338f6215" />
+
+Потом поправил molecule.yml
+```
+driver:
+  name: docker
+
+platforms:
+  - name: oraclelinux8
+    image: oraclelinux:8
+    privileged: true
+
+  - name: ubuntu_latest
+    image: ubuntu:latest
+    privileged: true
+
+provisioner:
+  name: ansible
+
+verifier:
+  name: ansible
+```
+И переписал converge.yml
+```
+---
+- name: Converge
+  hosts: all
+  become: true
+  gather_facts: true
+
+  roles:
+    - vector-role
+```
+
+Кроме того, community-docker-5.0.3.tar.gz не качался с ansible-galaxy, судя по всему из-за провайдерских блокировок или санкций, пришлось делать обходным путём.
+
 3. Добавьте несколько разных дистрибутивов (oraclelinux:8, ubuntu:latest) для инстансов и протестируйте роль, исправьте найденные ошибки, если они есть.
 4. Добавьте несколько assert в verify.yml-файл для  проверки работоспособности vector-role (проверка, что конфиг валидный, проверка успешности запуска и др.). 
 5. Запустите тестирование роли повторно и проверьте, что оно прошло успешно.

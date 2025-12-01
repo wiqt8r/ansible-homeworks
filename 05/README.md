@@ -5,32 +5,31 @@
 1. Установите molecule и его драйвера: `pip3 install "molecule molecule_docker molecule_podman`.
 2. Выполните `docker pull aragast/netology:latest` —  это образ с podman, tox и несколькими пайтонами (3.7 и 3.9) внутри.
 
-## Основная часть
+**Примечание преподавателям:**
+Тут всё рассчитано на очень старую молекулу и не работает так, как написано. Даже первый пункт из "Подготовки" не выполняется, команды из заданий тоже ломаются на актуальной молекуле. Пришлось идти обходным путём и делать всё в контейнере, так хотя бы удалось запустить старую молекулу.
 
-Ваша цель — настроить тестирование ваших ролей. 
-
-Задача — сделать сценарии тестирования для vector. 
-
-Ожидаемый результат — все сценарии успешно проходят тестирование ролей.
 
 ### Molecule
 
 1. Запустите  `molecule test -s ubuntu_xenial` (или с любым другим сценарием, не имеет значения) внутри корневой директории clickhouse-role, посмотрите на вывод команды. Данная команда может отработать с ошибками или не отработать вовсе, это нормально. Наша цель - посмотреть как другие в реальном мире используют молекулу И из чего может состоять сценарий тестирования.
 
-Команда не отрабатывает, ошибается на 'playbooks', т.к. судя по всему ДЗ писалось под другую версию Молекулы.
+Команда отрабатывает
 
-<img width="1973" height="140" alt="image" src="https://github.com/user-attachments/assets/016945fb-664c-4c7b-9672-8fbf806430a4" />
+<img width="2009" height="1294" alt="image" src="https://github.com/user-attachments/assets/65a4bcbe-0d3a-41eb-8215-6dd755e64fb2" />
 
 2. Перейдите в каталог с ролью vector-role и создайте сценарий тестирования по умолчанию при помощи `molecule init scenario --driver-name docker`.
 
-Молекула не поняла `--driver-name docker`, 
-<img width="1865" height="141" alt="image" src="https://github.com/user-attachments/assets/184d48e7-d9c5-4546-9a05-46d92c81c369" />
+Сценарий инициализирован:
+<img width="1984" height="413" alt="image" src="https://github.com/user-attachments/assets/9f75d7ba-64c8-43f7-af4b-aa4c7bfb9f18" />
 
-пришлось сделать `molecule init scenario default`
-<img width="1940" height="690" alt="image" src="https://github.com/user-attachments/assets/adb6123e-a7fd-41bc-9139-e069338f6215" />
+3. Добавьте несколько разных дистрибутивов (oraclelinux:8, ubuntu:latest) для инстансов и протестируйте роль, исправьте найденные ошибки, если они есть.
 
-Потом поправил molecule.yml
+Сделал `molecule/default/molecule.yml`
 ```
+---
+dependency:
+  name: galaxy
+
 driver:
   name: docker
 
@@ -49,21 +48,28 @@ provisioner:
 verifier:
   name: ansible
 ```
-И переписал converge.yml
+
+И `converge.yml`
 ```
 ---
 - name: Converge
   hosts: all
   become: true
-  gather_facts: true
 
   roles:
     - vector-role
 ```
 
-Кроме того, community-docker-5.0.3.tar.gz не качался с ansible-galaxy, судя по всему из-за провайдерских блокировок или санкций, пришлось делать обходным путём.
+Тестовый прогон:
+<img width="2009" height="1294" alt="image" src="https://github.com/user-attachments/assets/d5dfd5dd-1d38-41ba-9a69-7428ccaa7172" />
 
-3. Добавьте несколько разных дистрибутивов (oraclelinux:8, ubuntu:latest) для инстансов и протестируйте роль, исправьте найденные ошибки, если они есть.
+ошибается на доступе в ansible-galaxy, заменяю в molecule.yml блок dependency на:
+```
+dependency:
+  name: shell
+  command: /bin/true
+```
+
 4. Добавьте несколько assert в verify.yml-файл для  проверки работоспособности vector-role (проверка, что конфиг валидный, проверка успешности запуска и др.). 
 5. Запустите тестирование роли повторно и проверьте, что оно прошло успешно.
 5. Добавьте новый тег на коммит с рабочим сценарием в соответствии с семантическим версионированием.

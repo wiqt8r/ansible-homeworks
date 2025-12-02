@@ -1,0 +1,43 @@
+---
+- name: Verify
+  hosts: localhost
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: Check that vector binary exists
+      ansible.builtin.stat:
+        path: /usr/local/bin/vector
+      register: vector_bin
+
+    - name: Assert that vector binary exists and is executable
+      ansible.builtin.assert:
+        that:
+          - vector_bin.stat.exists
+          - vector_bin.stat.executable
+        success_msg: "Vector binary is present and executable"
+        fail_msg: "Vector binary is missing or not executable"
+
+    - name: Check that vector config is present
+      ansible.builtin.stat:
+        path: /etc/vector/vector.yml
+      register: vector_cfg
+
+    - name: Assert that vector config is present
+      ansible.builtin.assert:
+        that:
+          - vector_cfg.stat.exists
+        success_msg: "Vector config is present at /etc/vector/vector.yml"
+        fail_msg: "Vector config is missing"
+
+    - name: Validate vector config syntax
+      ansible.builtin.command: /usr/local/bin/vector validate --config-yaml /etc/vector/vector.yml
+      register: vector_validate
+      changed_when: false
+
+    - name: Assert vector config is valid
+      ansible.builtin.assert:
+        that:
+          - vector_validate.rc == 0
+        success_msg: "Vector config is valid"
+        fail_msg: "Vector config is NOT valid, see previous task output"

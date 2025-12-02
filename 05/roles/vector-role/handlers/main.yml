@@ -1,0 +1,9 @@
+---
+- name: restart vector
+  become: true
+  ansible.builtin.service:
+    name: vector
+    state: restarted
+  when:
+    - ansible_service_mgr is defined
+    - ansible_service_mgr == "systemd"

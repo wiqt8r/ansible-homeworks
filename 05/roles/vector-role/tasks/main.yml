@@ -1,0 +1,113 @@
+---
+- name: Ensure vector group exists
+  become: true
+  ansible.builtin.group:
+    name: "{{ vector_group }}"
+    system: true
+
+- name: Ensure vector user exists
+  become: true
+  ansible.builtin.user:
+    name: "{{ vector_user }}"
+    group: "{{ vector_group }}"
+    system: true
+    create_home: false
+    shell: /sbin/nologin
+
+- name: Create vector installation directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ vector_install_dir }}"
+    state: directory
+    owner: "{{ vector_user }}"
+    group: "{{ vector_group }}"
+    mode: "0755"
+
+- name: Create vector data directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ vector_data_dir }}"
+    state: directory
+    owner: "{{ vector_user }}"
+    group: "{{ vector_group }}"
+    mode: "0755"
+
+- name: Ensure vector archive is present on target host
+  block:
+    - name: Download vector archive to target host (from internet)
+      get_url:
+        url: "{{ vector_download_url }}"
+        dest: "{{ vector_archive_path }}"
+        mode: '0644'
+        timeout: 60
+
+  rescue:
+    - name: "Fallback: copy pre-downloaded vector archive from role files"
+      copy:
+        src: "vector-0.51.1-x86_64-unknown-linux-musl.tar.gz"  # файл из roles/vector-role/files
+        dest: "{{ vector_archive_path }}"
+        mode: '0644'
+
+- name: Unpack vector archive
+  become: true
+  ansible.builtin.unarchive:
+    src: "{{ vector_archive_path }}"
+    dest: "{{ vector_install_dir }}"
+    remote_src: true
+    extra_opts:
+      - --strip-components=1
+
+- name: Create symlink for vector binary
+  become: true
+  ansible.builtin.file:
+    src: "{{ vector_install_dir }}/vector-x86_64-unknown-linux-musl/bin/vector"
+    dest: "{{ vector_bin_path }}"
+    state: link
+
+- name: Create vector config directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ vector_config_dir }}"
+    state: directory
+    owner: "{{ vector_user }}"
+    group: "{{ vector_group }}"
+    mode: "0755"
+
+- name: Deploy vector config
+  become: true
+  ansible.builtin.template:
+    src: "vector.yml.j2"
+    dest: "{{ vector_config_dir }}/vector.yml"
+    owner: "{{ vector_user }}"
+    group: "{{ vector_group }}"
+    mode: "0644"
+  notify: restart vector
+
+- name: Install vector systemd unit
+  become: true
+  ansible.builtin.template:
+    src: "vector.service.j2"
+    dest: "/etc/systemd/system/vector.service"
+    mode: "0644"
+  notify: restart vector
+  when:
+    - ansible_service_mgr is defined
+    - ansible_service_mgr == "systemd"
+
+- name: Reload systemd
+  become: true
+  ansible.builtin.systemd:
+    daemon_reload: true
+  when:
+    - ansible_service_mgr is defined
+    - ansible_service_mgr == "systemd"
+
+- name: Ensure vector service is enabled and running
+  become: true
+  ansible.builtin.service:
+    name: vector
+    state: "{{ vector_service_state }}"
+    enabled: "{{ vector_service_enabled }}"
+  when:
+    - ansible_service_mgr is defined
+    - ansible_service_mgr == "systemd"

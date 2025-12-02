@@ -1,0 +1,50 @@
+---
+dependency:
+  name: galaxy
+  options:
+    requirements-file: requirements.yml
+
+driver:
+  name: docker
+
+platforms:
+  - name: oraclelinux8
+    image: oraclelinux:8
+    privileged: true
+    command: /usr/bin/sleep infinity
+    tmpfs:
+      - /tmp:rw,exec,nosuid,nodev
+
+  - name: ubuntu_latest
+    image: ubuntu:latest
+    privileged: true
+    command: /usr/bin/sleep infinity
+    tmpfs:
+      - /tmp:rw,exec,nosuid,nodev
+
+provisioner:
+  name: ansible
+  inventory:
+    hosts:
+      all:
+        vars:
+          ansible_python_interpreter: /usr/bin/python3
+
+scenario:
+  name: default
+  test_sequence:
+    - dependency
+    - cleanup
+    - destroy
+    - syntax
+    - create
+    - prepare
+    - converge
+    - idempotence
+    - side_effect
+    - verify
+    - cleanup
+    - destroy
+
+verifier:
+  name: ansible

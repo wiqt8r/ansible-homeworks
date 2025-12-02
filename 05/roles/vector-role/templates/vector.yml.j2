@@ -1,0 +1,14 @@
+data_dir: /var/lib/vector
+
+sources:
+  demo_logs:
+    type: stdin
+
+sinks:
+  print:
+    type: console
+    inputs:
+      - demo_logs
+    encoding:
+      codec: json
+

@@ -1,0 +1,2 @@
+---
+vector_archive_path: "/tmp/vector-{{ vector_version }}.tar.gz"

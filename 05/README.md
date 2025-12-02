@@ -17,61 +17,30 @@
 
 <img width="2009" height="1294" alt="image" src="https://github.com/user-attachments/assets/65a4bcbe-0d3a-41eb-8215-6dd755e64fb2" />
 
-2. Перейдите в каталог с ролью vector-role и создайте сценарий тестирования по умолчанию при помощи `molecule init scenario --driver-name docker`.
-
 Сценарий инициализирован:
 <img width="1984" height="413" alt="image" src="https://github.com/user-attachments/assets/9f75d7ba-64c8-43f7-af4b-aa4c7bfb9f18" />
-
-3. Добавьте несколько разных дистрибутивов (oraclelinux:8, ubuntu:latest) для инстансов и протестируйте роль, исправьте найденные ошибки, если они есть.
-
-Сделал `molecule/default/molecule.yml`
-```
----
-dependency:
-  name: galaxy
-
-driver:
-  name: docker
-
-platforms:
-  - name: oraclelinux8
-    image: oraclelinux:8
-    privileged: true
-
-  - name: ubuntu_latest
-    image: ubuntu:latest
-    privileged: true
-
-provisioner:
-  name: ansible
-
-verifier:
-  name: ansible
-```
-
-И `converge.yml`
-```
----
-- name: Converge
-  hosts: all
-  become: true
-
-  roles:
-    - vector-role
-```
 
 Тестовый прогон:
 <img width="2009" height="1294" alt="image" src="https://github.com/user-attachments/assets/d5dfd5dd-1d38-41ba-9a69-7428ccaa7172" />
 
-ошибается на доступе в ansible-galaxy, заменяю в molecule.yml блок dependency на:
-```
-dependency:
-  name: shell
-  command: /bin/true
-```
+Были ошибки на доступе в ansible-galaxy, Пришлось сильно залезть в molecule.yml и converge.yml. Пришлось повозиться с ошибками вроде `fatal: [oraclelinux8]: FAILED! => {"msg": "docker command not found in PATH"}`
 
-4. Добавьте несколько assert в verify.yml-файл для  проверки работоспособности vector-role (проверка, что конфиг валидный, проверка успешности запуска и др.). 
-5. Запустите тестирование роли повторно и проверьте, что оно прошло успешно.
+На этом этапе мне надоело сражаться со сломанными зависимостями и недоступными репозиториями, я настроил _сами-понимаете-что_ на сервере для доступа к ansible-galaxy в обход блокировок.
+
+После некотрых доработок в роли, конверж наконец-то прошел без ошибок
+
+<img width="2009" height="1294" alt="image" src="https://github.com/user-attachments/assets/6c5a3498-3b57-4dbf-8f7d-d6933dc9d167" />
+<img width="1988" height="552" alt="image" src="https://github.com/user-attachments/assets/61a4dd67-a9d7-4311-a341-18e9461e1e88" />
+
+Прогон `molecule test -s default` пройден
+<img width="1984" height="1144" alt="image" src="https://github.com/user-attachments/assets/916cc195-1198-4fef-a7f8-0b7b87fb92d5" />
+
+Написан `molecule/default/verify.yml`:
+<img width="2009" height="1294" alt="image" src="https://github.com/user-attachments/assets/e3ce3d73-c4eb-494d-a045-ba8dbc38a27c" />
+
+Повторный прогон тестирования успешен:
+<img width="2009" height="1294" alt="image" src="https://github.com/user-attachments/assets/fd6bfb5c-2e50-49b5-8069-3789aef6f0bb" />
+
 5. Добавьте новый тег на коммит с рабочим сценарием в соответствии с семантическим версионированием.
 
 ### Tox

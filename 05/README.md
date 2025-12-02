@@ -1,19 +1,12 @@
 # Домашнее задание к занятию 5 «Тестирование roles»
 
-## Подготовка к выполнению
-
-1. Установите molecule и его драйвера: `pip3 install "molecule molecule_docker molecule_podman`.
-2. Выполните `docker pull aragast/netology:latest` —  это образ с podman, tox и несколькими пайтонами (3.7 и 3.9) внутри.
-
 **Примечание преподавателям:**
 Тут всё рассчитано на очень старую молекулу и не работает так, как написано. Даже первый пункт из "Подготовки" не выполняется, команды из заданий тоже ломаются на актуальной молекуле. Пришлось идти обходным путём и делать всё в контейнере, так хотя бы удалось запустить старую молекулу.
 
 
 ### Molecule
 
-1. Запустите  `molecule test -s ubuntu_xenial` (или с любым другим сценарием, не имеет значения) внутри корневой директории clickhouse-role, посмотрите на вывод команды. Данная команда может отработать с ошибками или не отработать вовсе, это нормально. Наша цель - посмотреть как другие в реальном мире используют молекулу И из чего может состоять сценарий тестирования.
-
-Команда отрабатывает
+Команда `molecule test -s ubuntu_xenial` отрабатывает
 
 <img width="2009" height="1294" alt="image" src="https://github.com/user-attachments/assets/65a4bcbe-0d3a-41eb-8215-6dd755e64fb2" />
 
@@ -41,14 +34,25 @@
 Повторный прогон тестирования успешен:
 <img width="2009" height="1294" alt="image" src="https://github.com/user-attachments/assets/fd6bfb5c-2e50-49b5-8069-3789aef6f0bb" />
 
-5. Добавьте новый тег на коммит с рабочим сценарием в соответствии с семантическим версионированием.
+Сделан коммит с версией 0.2.0.
 
 ### Tox
 
-1. Добавьте в директорию с vector-role файлы из [директории](./example).
-2. Запустите `docker run --privileged=True -v <path_to_repo>:/opt/vector-role -w /opt/vector-role -it aragast/netology:latest /bin/bash`, где path_to_repo — путь до корня репозитория с vector-role на вашей файловой системе.
-3. Внутри контейнера выполните команду `tox`, посмотрите на вывод.
-5. Создайте облегчённый сценарий для `molecule` с драйвером `molecule_podman`. Проверьте его на исполнимость.
+Контейнер запущен, команда `tox` выполнена, вывод:
+<img width="2009" height="1294" alt="image" src="https://github.com/user-attachments/assets/ef26006c-fe10-4824-8b23-a152755cdf5f" />
+<img width="1987" height="400" alt="image" src="https://github.com/user-attachments/assets/b40f645b-7c80-4720-8847-8b36b0587f73" />
+
+Создан сценарий molecule с драйвером podman
+`molecule/podman/molecule.yml`
+<img width="1985" height="646" alt="image" src="https://github.com/user-attachments/assets/1e83b8c6-4483-4cc6-85ac-bc531abddbd7" />
+
+`molecule/podman/converge.yml`
+<img width="1988" height="222" alt="image" src="https://github.com/user-attachments/assets/6ee1b36c-83c5-4774-a887-1cff0b399f08" />
+
+`molecule/podman/verify.yml`
+<img width="1984" height="817" alt="image" src="https://github.com/user-attachments/assets/d5bc8718-6c8f-4866-8a86-f15dddfd3e6f" />
+
+
 6. Пропишите правильную команду в `tox.ini`, чтобы запускался облегчённый сценарий.
 8. Запустите команду `tox`. Убедитесь, что всё отработало успешно.
 9. Добавьте новый тег на коммит с рабочим сценарием в соответствии с семантическим версионированием.

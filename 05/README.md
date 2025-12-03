@@ -62,7 +62,7 @@ Upd.: позже обнаружил, что запушил сюда: https://git
 Команда `tox` выполнена, всё успешно.
 <img width="2009" height="1294" alt="image" src="https://github.com/user-attachments/assets/4187a68b-47be-4a76-b413-35609a8e21a7" />
 
-Сделал коммит с тегом 0.2.1: https://github.com/wiqt8r/vector-role
+Сделал коммит с тегом 0.2.1: https://github.com/wiqt8r/vector-role/tree/0.2.1
 
 ---
 

@@ -44,17 +44,23 @@
 
 Создан сценарий molecule с драйвером podman
 `molecule/podman/molecule.yml`
-<img width="1985" height="646" alt="image" src="https://github.com/user-attachments/assets/1e83b8c6-4483-4cc6-85ac-bc531abddbd7" />
+<img width="1979" height="636" alt="image" src="https://github.com/user-attachments/assets/7981152e-17d7-40b9-8009-50e1997f6493" />
 
 `molecule/podman/converge.yml`
-<img width="1988" height="222" alt="image" src="https://github.com/user-attachments/assets/6ee1b36c-83c5-4774-a887-1cff0b399f08" />
+<img width="1983" height="301" alt="image" src="https://github.com/user-attachments/assets/4ffe126e-fbeb-436b-9e43-53d7a6a5da20" />
 
 `molecule/podman/verify.yml`
-<img width="1984" height="817" alt="image" src="https://github.com/user-attachments/assets/d5bc8718-6c8f-4866-8a86-f15dddfd3e6f" />
+<img width="1987" height="846" alt="image" src="https://github.com/user-attachments/assets/b81bd481-3d0c-40b2-812d-37f6d0093198" />
 
+Выполнение `molecule test -s podman` успешно:
+<img width="2009" height="1294" alt="image" src="https://github.com/user-attachments/assets/36e63b91-7ed3-46c3-b384-866c6f723111" />
 
-6. Пропишите правильную команду в `tox.ini`, чтобы запускался облегчённый сценарий.
-8. Запустите команду `tox`. Убедитесь, что всё отработало успешно.
+Обновлённый `tox.ini`:
+<img width="1981" height="353" alt="image" src="https://github.com/user-attachments/assets/7ba7b2f7-8218-49bb-9bee-26a1958caa6f" />
+
+Команда `tox` выполнена, всё успешно.
+<img width="2009" height="1294" alt="image" src="https://github.com/user-attachments/assets/4187a68b-47be-4a76-b413-35609a8e21a7" />
+
 9. Добавьте новый тег на коммит с рабочим сценарием в соответствии с семантическим версионированием.
 
 После выполнения у вас должно получится два сценария molecule и один tox.ini файл в репозитории. Не забудьте указать в ответе теги решений Tox и Molecule заданий. В качестве решения пришлите ссылку на  ваш репозиторий и скриншоты этапов выполнения задания. 

@@ -30,23 +30,13 @@
 
 
 
-**Шаг 7.** Выйдите из виртуального окружения.
+Шаг 12 выполнен, коллекция выложена в репозиторий с тегом `1.0.0`: https://github.com/wiqt8r/my_own_collection
 
-**Шаг 8.** Инициализируйте новую collection: `ansible-galaxy collection init my_own_namespace.yandex_cloud_elk`.
+Шаг 13 выполнен, tar.gz архив помещен в субдиректорию build: https://github.com/wiqt8r/my_own_collection/tree/main/build
 
-**Шаг 9.** В эту collection перенесите свой module в соответствующую директорию.
+Шаг 15 выполнен, collection установлена:
+<img width="1987" height="262" alt="image" src="https://github.com/user-attachments/assets/819519b2-8090-4785-9e81-a81e7443f3a4" />
 
-**Шаг 10.** Single task playbook преобразуйте в single task role и перенесите в collection. У role должны быть default всех параметров module.
-
-**Шаг 11.** Создайте playbook для использования этой role.
-
-**Шаг 12.** Заполните всю документацию по collection, выложите в свой репозиторий, поставьте тег `1.0.0` на этот коммит.
-
-**Шаг 13.** Создайте .tar.gz этой collection: `ansible-galaxy collection build` в корневой директории collection.
-
-**Шаг 14.** Создайте ещё одну директорию любого наименования, перенесите туда single task playbook и архив c collection.
-
-**Шаг 15.** Установите collection из локального архива: `ansible-galaxy collection install <archivename>.tar.gz`.
 
 **Шаг 16.** Запустите playbook, убедитесь, что он работает.
 
